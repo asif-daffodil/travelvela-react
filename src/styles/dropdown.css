@@ -1,0 +1,28 @@
+/* React Dropdown Functionality */
+.dropdown-menu-item.show {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: perspective(300px) rotateX(0) !important;
+  -webkit-transform: perspective(300px) rotateX(0) !important;
+  -moz-transform: perspective(300px) rotateX(0) !important;
+  -ms-transform: perspective(300px) rotateX(0) !important;
+  -o-transform: perspective(300px) rotateX(0) !important;
+}
+
+/* Mobile menu show state */
+@media only screen and (max-width: 991px) {
+  .main-menu-content.show {
+    display: block !important;
+  }
+  
+  .dropdown-menu-item.show {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: perspective(0) rotateX(0) !important;
+    -webkit-transform: perspective(0) rotateX(0) !important;
+    -moz-transform: perspective(0) rotateX(0) !important;
+    -ms-transform: perspective(0) rotateX(0) !important;
+    -o-transform: perspective(0) rotateX(0) !important;
+  }
+}

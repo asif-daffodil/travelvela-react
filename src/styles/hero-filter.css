@@ -1,0 +1,16 @@
+.s-select-widget-dropdown {
+    display: none;
+  }
+  
+  .s-select-widget-dropdown.show {
+    display: block;
+  }
+  /* Ensure the react-datepicker calendar appears above other elements */
+  .react-datepicker-popper {
+    z-index: 9999 !important;
+  }
+  /* Calendar container itself */
+  .react-datepicker {
+    z-index: 9999 !important;
+  }
+  

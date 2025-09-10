@@ -1,0 +1,40 @@
+{
+  "name": "travelvela-react",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@fancyapps/fancybox": "^3.5.7",
+    "animate.css": "^4.1.1",
+    "bootstrap": "^5.3.8",
+    "daterangepicker": "^3.1.0",
+    "flag-icon-css": "^4.1.7",
+    "jquery": "^3.7.1",
+    "jquery-ui-dist": "^1.13.3",
+    "line-awesome": "^1.3.0",
+    "owl.carousel": "^2.3.4",
+    "react": "^19.1.1",
+    "react-bootstrap": "^2.10.10",
+    "react-datepicker": "^8.7.0",
+    "react-dom": "^19.1.1",
+    "react-router-dom": "^7.8.2",
+    "select2": "^4.1.0-rc.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.33.0",
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.7",
+    "@vitejs/plugin-react-swc": "^4.0.0",
+    "eslint": "^9.33.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.3.0",
+    "vite": "^7.1.2"
+  }
+}
