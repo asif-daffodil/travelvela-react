@@ -25,14 +25,12 @@ import Recover from './pages/Recover.jsx'
 import Services from './pages/Services.jsx'
 import TourBooking from './pages/TourBooking.jsx'
 import TourDetails from './pages/TourDetails.jsx'
-
-
 import TourSearchResult from './pages/TourSearchResult.jsx'
 import Layout3 from './layouts/layout-3.jsx';
 import UserDashboard from './pages/UserDashboard.jsx'
 import UserDashboardBooking from './pages/UserDashboardBooking.jsx'
 
-// Router configuration using React Router data APIs
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -168,7 +166,6 @@ const router = createBrowserRouter([
       { index: true, element: React.createElement(TourDetails) },
     ],
   },
-
   {
     path: 'tour-search-result',
     element: React.createElement(Layout2),
@@ -176,20 +173,12 @@ const router = createBrowserRouter([
       { index: true, element: React.createElement(TourSearchResult) },
     ],
   },
-
-  // User Dashboard Booking Route
   {
     path: 'user-dashboard',
     element: React.createElement(Layout3),
     children: [
-  { index: true, element: React.createElement(UserDashboard) }
-    ],
-  },
-  {
-    path: 'user-dashboard-booking',
-    element: React.createElement(Layout3),
-    children: [
-      { index: true, element: React.createElement(UserDashboardBooking) },
+      { index: true, element: React.createElement(UserDashboard) },
+      { path: 'booking', element: React.createElement(UserDashboardBooking) },
     ],
   },
   {
@@ -206,12 +195,11 @@ const router = createBrowserRouter([
       { index: true, element: React.createElement(PaymentReceived) },
     ],
   },
-  // Catch-all route for undefined paths -> 404 page
   {
     path: '*',
     element: React.createElement(Layout2),
     children: [
-  { path: '*', element: React.createElement(Page404) },
+      { path: '*', element: React.createElement(Page404) },
     ],
   },
 ])

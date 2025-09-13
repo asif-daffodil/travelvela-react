@@ -90,6 +90,7 @@ export default function Header2() {
                             <li><Link to="/pricing">Pricing</Link></li>
                             <li><Link to="/faq">FAQ</Link></li>
                             <li><a href="/user-dashboard">User Dashboard</a></li>
+                            <li><Link to="/user-dashboard/booking">My Booking</Link></li>
                             <li><a href="/user-profile">User Profile</a></li>
                             <li><Link to="/recover">Recover Password</Link></li>
                             <li><a href="/checkout">Checkout</a></li>

@@ -4,7 +4,7 @@ import { createRoot } from 'react-dom/client'
 // Global CSS moved into the root layout component (`src/layouts/layout-1.jsx`)
 import App from './App.jsx'
 import { RouterProvider } from 'react-router-dom'
-import router from './router'
+import router from './router.js'
 // import BackToTop from './components/layout/BackToTop';
 
 // Third-party CSS equivalents for the original HTML site's styles

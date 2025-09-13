@@ -5,7 +5,6 @@ import logo2 from '../assets/images/logo2.png'
 export default function Header1() {
   return (
     <header className="header-area home-header">
-      
       <div className="header-menu-wrapper">
         <div className="container">
           <div className="header-main-inner">
@@ -35,44 +34,45 @@ export default function Header1() {
                         <li>
                           <a href="#">Flight <i className="la la-angle-down" /></a>
                           <ul className="dropdown-menu-item">
-                            <li><a href="#">Flight Search Result</a></li>
-                            <li><a href="#">Flight details</a></li>
-                            <li><a href="#">Flight Booking</a></li>
+                            <li><Link to="/flight-search-result">Flight Search Result</Link></li>
+                            <li><Link to="/flight-single">Flight Details</Link></li>
+                            <li><Link to="/flight-booking">Flight Booking</Link></li>
                           </ul>
                         </li>
                         <li>
                           <a href="#">Hotel <i className="la la-angle-down" /></a>
                           <ul className="dropdown-menu-item">
-                            <li><a href="#">Hotel Search Result</a></li>
-                            <li><a href="#">Hotel details</a></li>
-                            <li><a href="#">Hotel Booking</a></li>
+                            <li><Link to="/hotel-search-result">Hotel Search Result</Link></li>
+                            <li><Link to="/hotel-single">Hotel Details</Link></li>
+                            <li><Link to="/hotel-booking">Hotel Booking</Link></li>
                           </ul>
                         </li>
                         <li>
                           <a href="#">Tour <i className="la la-angle-down" /></a>
                           <ul className="dropdown-menu-item">
-                            <li><a href="#">Tour Search Result</a></li>
-                            <li><a href="#">Tour details</a></li>
-                            <li><a href="#">Tour Booking</a></li>
+                            <li><Link to="/tour-search-result">Tour Search Result</Link></li>
+                            <li><Link to="/tour-details">Tour details</Link></li>
+                            <li><Link to="/tour-booking">Tour Booking</Link></li>
                           </ul>
                         </li>
                         <li>
-                          <Link to="/about">about</Link>
+                          <Link to="/about">About</Link>
                         </li>
                         <li>
                           <a href="#">Pages <i className="la la-angle-down" /></a>
                           <ul className="dropdown-menu-item">
-                            <li><a href="#">Our Services</a></li>
-                            <li><a href="#">Gallery</a></li>
-                            <li><a href="#">pricing</a></li>
-                            <li><a href="#">faq</a></li>
-                            <li><a href="#">User Dashboard</a></li>
-                            <li><a href="#">User profile</a></li>
-                            <li><a href="#">recover password</a></li>
-                            <li><a href="#">Checkout</a></li>
-                            <li><a href="#">payment received</a></li>
-                            <li><a href="#">payment complete</a></li>
-                            <li><a href="#">404 page</a></li>
+                            <li><Link to="/services">Our Services</Link></li>
+                            <li><Link to="/gallery">Gallery</Link></li>
+                            <li><Link to="/pricing">Pricing</Link></li>
+                            <li><Link to="/faq">FAQ</Link></li>
+                            <li><a href="/user-dashboard">User Dashboard</a></li>
+                            <li><Link to="/user-dashboard/booking">My Booking</Link></li>
+                            <li><a href="/user-profile">User Profile</a></li>
+                            <li><Link to="/recover">Recover Password</Link></li>
+                            <li><a href="/checkout">Checkout</a></li>
+                            <li><Link to="/payment-received">Payment Received</Link></li>
+                            <li><Link to="/payment-complete">Payment Complete</Link></li>
+                            <li><Link to="/404">404 Page</Link></li>
                           </ul>
                         </li>
                         <li>
@@ -82,7 +82,7 @@ export default function Header1() {
                             <li><Link to="/blog-single">Blog Details</Link></li>
                           </ul>
                         </li>
-                        <li><Link to="/contact">contact</Link>
+                        <li><Link to="/contact">Contact</Link>
                         </li>
                       </ul>
                     </nav>
