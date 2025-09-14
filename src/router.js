@@ -31,6 +31,13 @@ import TourSearchResult from './pages/TourSearchResult.jsx'
 import Layout3 from './layouts/layout-3.jsx';
 import UserDashboard from './pages/UserDashboard.jsx'
 import UserDashboardBooking from './pages/UserDashboardBooking.jsx'
+import UserDashboardFlightBookingDetails from './pages/UserDashboardFlightBookingDetails.jsx'
+import UserDashboardHotelBookingDetails from './pages/UserDashboardHotelBookingDetails.jsx'
+import UserDashboardProfile from './pages/UserDashboardProfile.jsx'
+import UserDashboardReviews from './pages/UserDashboardReviews.jsx'
+import UserDashboardWishlist from './pages/UserDashboardWishlist.jsx'
+import UserDashboardSettings from './pages/UserDashboardSettings.jsx'
+import UserProfile from './pages/UserProfile.jsx'
 
 // Router configuration using React Router data APIs
 const router = createBrowserRouter([
@@ -190,6 +197,55 @@ const router = createBrowserRouter([
     element: React.createElement(Layout3),
     children: [
       { index: true, element: React.createElement(UserDashboardBooking) },
+    ],
+  },
+  {
+    path: 'user-dashboard-booking/user-dashboard-flight-booking-details',
+    element: React.createElement(Layout3),
+    children: [
+      { index: true, element: React.createElement(UserDashboardFlightBookingDetails) },
+    ],
+  },
+  {
+    path: 'user-dashboard-booking/user-dashboard-hotel-booking-details',
+    element: React.createElement(Layout3),
+    children: [
+      { index: true, element: React.createElement(UserDashboardHotelBookingDetails) },
+    ],
+  },
+  {
+    path: 'user-dashboard-profile',
+    element: React.createElement(Layout3),
+    children: [
+      { index: true, element: React.createElement(UserDashboardProfile) },
+    ],
+  },
+  {
+    path: 'user-dashboard-reviews',
+    element: React.createElement(Layout3),
+    children: [
+      { index: true, element: React.createElement(UserDashboardReviews) },
+    ],
+  },
+  {
+    path: 'user-dashboard-wishlist',
+    element: React.createElement(Layout3),
+    children: [
+      { index: true, element: React.createElement(UserDashboardWishlist) },
+    ],
+  },
+  {
+    path: 'user-dashboard-settings',
+    element: React.createElement(Layout3),
+    children: [
+      { index: true, element: React.createElement(UserDashboardSettings) },
+    ],
+  },
+  {
+    path: 'user-profile',
+    element: React.createElement(Layout2),
+    children: [
+      { index: true, element: React.createElement(UserProfile) },
     ],
   },
   {

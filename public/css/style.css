@@ -13023,6 +13023,11 @@ overflow: hidden;
 .sidebar-menu li.page-active > a i {
   color: #fff;
 }
+/* Ensure utility color classes with !important don't override active icon color */
+.sidebar-menu li.page-active > a i[class*="text-color"],
+.sidebar-menu li.active > a i[class*="text-color"] {
+  color: #fff !important;
+}
 .sidebar-menu li.active .side-menu-icon,
 .sidebar-menu li.page-active .side-menu-icon {
   color: #fff;
