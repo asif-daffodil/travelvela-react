@@ -1,0 +1,45 @@
+/* Styles scoped to BlogSidebarComponent markup */
+
+/* Increase the blog image height while keeping aspect cover */
+.blog__card .blog__cover {
+  position: relative;
+  width: 100%;
+  height: auto; /* natural height */
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.blog__card .blog__cover img {
+  width: 100%;
+  height: auto; /* natural height */
+  display: block;
+}
+
+/* Title size and hover color */
+.blog__card .card-title {
+  font-size: 20px; /* required size */
+  line-height: 1.3;
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+
+.blog__card .card-title a {
+  color: #212529; /* text-dark equivalent */
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+.blog__card .card-title a:hover,
+.blog__card .card-title a:focus,
+.blog__card .card-title a:active {
+  color: #0082ff !important; /* ensure hover color applies */
+}
+
+/* Optional: adjust meta spacing */
+.blog__card .blog__meta {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 12px;
+  margin-top: 10px;
+}

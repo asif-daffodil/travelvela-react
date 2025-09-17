@@ -1,6 +1,84 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
+import BlogCategories from './BlogCategories';
+import { api } from '../../services/apiClient';
+
+const toAbsoluteUrl = (url) => {
+    if (!url) return null;
+    if (/^https?:\/\//i.test(url)) return url;
+    return `https://admin.travelvela.com/${String(url).replace(/^\/+/, '')}`;
+};
+
+const normalizeBlog = (b) => ({
+    id: b?.id ?? b?._id ?? b?.slug ?? Math.random().toString(36).slice(2),
+    slug: b?.slug ?? b?.id ?? b?._id ?? null,
+    title: b?.title ?? b?.name ?? 'Untitled',
+    image: toAbsoluteUrl(b?.image ?? b?.cover_image ?? b?.featured_image ?? b?.thumbnail) || 'images/img20.jpg',
+    categories: Array.isArray(b?.categories)
+        ? b.categories.map((c) => (c?.name || c))
+        : (typeof b?.tags === 'string'
+            ? b.tags.split(',').map((s) => s.trim()).filter(Boolean)
+            : [b?.category_name ?? b?.category?.name ?? b?.category].filter(Boolean)),
+    author: b?.author?.name ?? b?.author ?? b?.meta_autor ?? b?.meta_author ?? 'TravelVela',
+    created_at: b?.entry_date ?? b?.created_at ?? b?.date ?? b?.published_at ?? null,
+    comments_count: b?.comments_count ?? b?.comments?.length ?? null,
+    likes: b?.likes ?? b?.likes_count ?? null,
+    content: b?.content ?? b?.description ?? b?.body ?? '',
+});
+
+const formatDate = (iso) => {
+    if (!iso) return '';
+    const norm = typeof iso === 'string' && iso.includes(' ') && !iso.includes('T') ? iso.replace(' ', 'T') : iso;
+    const d = new Date(norm);
+    if (Number.isNaN(d.getTime())) return '';
+    return d.toLocaleDateString(undefined, { month: 'long', day: '2-digit', year: 'numeric' });
+};
 
 const BlogSingleComponent = () => {
+    const { slug } = useParams();
+    const location = useLocation();
+    const preloaded = location.state?.blog;
+    const [blog, setBlog] = useState(preloaded ? normalizeBlog(preloaded) : null);
+    const [loading, setLoading] = useState(!preloaded);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        let mounted = true;
+        if (!slug) return () => { mounted = false; };
+        (async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                // Official detail endpoint
+                const detailRes = await api.get(`/blog/details/${slug}`);
+                const data = detailRes?.data?.data ?? null;
+                if (mounted) setBlog(data ? normalizeBlog(data) : null);
+            } catch (err) {
+                if (mounted) setError(err?.response?.data?.message || err.message || 'Failed to load blog');
+            } finally {
+                if (mounted) setLoading(false);
+            }
+        })();
+    return () => { mounted = false; };
+    }, [slug]);
+
+    const categories = useMemo(() => blog?.categories ?? [], [blog]);
+
+    if (loading) {
+        return (
+            <section className="card-area section-gap"><div className="container"><p>Loading blog...</p></div></section>
+        );
+    }
+    if (error) {
+        return (
+            <section className="card-area section-gap"><div className="container"><p className="text-danger">{error}</p></div></section>
+        );
+    }
+    if (!blog) {
+        return (
+            <section className="card-area section-gap"><div className="container"><p>No blog found.</p></div></section>
+        );
+    }
     return (
         <div>
             <section className="breadcrumb-area bread-bg-9">
@@ -48,38 +126,32 @@ const BlogSingleComponent = () => {
                         <div className="col-lg-8">
                             <div className="card-item blog-card blog-card-layout-2 blog-single-card mb-5">
                                 <div className="card-img before-none">
-                                    <img src="images/img20.jpg" alt="blog-img" />
+                                    <img src={blog.image} alt="blog-img" onError={(e)=>{e.currentTarget.src='images/img20.jpg';}} />
                                 </div>
                                 <div className="card-body px-0 pb-0">
                                     <div className="post-categories">
-                                        <a href="#" className="badge">Travel</a>
-                                        <a href="#" className="badge">lifestyle</a>
+                                        {categories.map((c, i) => (
+                                            <a href="#" className="badge" key={`${c}-${i}`}>{c}</a>
+                                        ))}
                                     </div>
                                     <h3 className="card-title font-size-28">
-                                        When Traveling Avoid Expensive Hotels &amp; Resorts
+                                        {blog.title}
                                     </h3>
                                     <p className="card-meta pb-3">
-                                        <span className="post__author">By <a href="#" className="text-gray">John Doe</a></span>
+                                        <span className="post__author">By <a href="#" className="text-gray">{blog.author}</a></span>
                                         <span className="post-dot" />
-                                        <span className="post__date"> 1 January, 2020</span>
+                                        <span className="post__date"> {formatDate(blog.created_at)}</span>
                                         <span className="post-dot" />
-                                        <span className="post__time"><a href="#" className="text-gray">4 Comments</a></span>
+                                        {typeof blog.comments_count === 'number' && (
+                                            <span className="post__time"><a href="#" className="text-gray">{blog.comments_count} Comments</a></span>
+                                        )}
                                         <span className="post-dot" />
-                                        <span className="post__time"><a href="#" className="text-gray">202 Likes</a></span>
+                                        {typeof blog.likes === 'number' && (
+                                            <span className="post__time"><a href="#" className="text-gray">{blog.likes} Likes</a></span>
+                                        )}
                                     </p>
                                     <div className="section-block" />
-                                    <p className="card-text py-3">
-                                        Simple point-and-shoot digital cameras can give surprising
-                                        quality when they have the right lenses and sensors. Because
-                                        they are totally automatic in focus and exposure, they just
-                                        have to be pointed at a subject and clicked. They have limited
-                                        capabilities for controlling the image
-                                    </p>
-                                    <p className="card-text pb-3">
-                                        Suspendisse ullamcorper lacus et commodo laoreet. Sed sodales
-                                        aliquet felis, quis volutpat massa imperdiet in. Praesent
-                                        rutrum malesuada risus, ullamcorper pretium tortor
-                                    </p>
+                                    <div className="card-text py-3" dangerouslySetInnerHTML={{ __html: blog.content }} />
                                     <div className="photo-block-gallery">
                                         <h3 className="title pb-2">Travelling Highlight</h3>
                                         <p className="card-text pb-4">
@@ -529,76 +601,7 @@ const BlogSingleComponent = () => {
                                     </div>
                                 </div>
                                 {/* end sidebar-widget */}
-                                <div className="sidebar-widget">
-                                    <h3 className="title stroke-shape">Categories</h3>
-                                    <div className="sidebar-category">
-                                        <div className="custom-checkbox">
-                                            <input type="checkbox" className="form-check-input" id="cat1" />
-                                            <label htmlFor="cat1">All <span className="font-size-13 ms-1">(55)</span></label>
-                                        </div>
-                                        <div className="custom-checkbox">
-                                            <input type="checkbox" className="form-check-input" id="cat2" />
-                                            <label htmlFor="cat2">Active Adventure Tours
-                                                <span className="font-size-13 ms-1">(8)</span></label>
-                                        </div>
-                                        <div className="custom-checkbox">
-                                            <input type="checkbox" className="form-check-input" id="cat3" />
-                                            <label htmlFor="cat3">Ecotourism
-                                                <span className="font-size-13 ms-1">(5)</span></label>
-                                        </div>
-                                        <div className="custom-checkbox">
-                                            <input type="checkbox" className="form-check-input" id="cat4" />
-                                            <label htmlFor="cat4">Escorted Tours
-                                                <span className="font-size-13 ms-1">(2)</span></label>
-                                        </div>
-                                        <div className="custom-checkbox">
-                                            <input type="checkbox" className="form-check-input" id="cat5" />
-                                            <label htmlFor="cat5">Group Tours
-                                                <span className="font-size-13 ms-1">(11)</span></label>
-                                        </div>
-                                        <div className="custom-checkbox">
-                                            <input type="checkbox" className="form-check-input" id="cat6" />
-                                            <label htmlFor="cat6">Ligula <span className="font-size-13 ms-1">(3)</span></label>
-                                        </div>
-                                        <div className="collapse" id="categoryMenu">
-                                            <div className="custom-checkbox">
-                                                <input type="checkbox" className="form-check-input" id="cat7" />
-                                                <label htmlFor="cat7">Family Tours
-                                                    <span className="font-size-13 ms-1">(4)</span></label>
-                                            </div>
-                                            <div className="custom-checkbox">
-                                                <input type="checkbox" className="form-check-input" id="cat8" />
-                                                <label htmlFor="cat8">City Trips
-                                                    <span className="font-size-13 ms-1">(5)</span></label>
-                                            </div>
-                                            <div className="custom-checkbox">
-                                                <input type="checkbox" className="form-check-input" id="cat9" />
-                                                <label htmlFor="cat9">National Parks Tours
-                                                    <span className="font-size-13 ms-1">(3)</span></label>
-                                            </div>
-                                            <div className="custom-checkbox">
-                                                <input type="checkbox" className="form-check-input" id="cat10" />
-                                                <label htmlFor="cat10">Vacations
-                                                    <span className="font-size-13 ms-1">(3)</span></label>
-                                            </div>
-                                            <div className="custom-checkbox">
-                                                <input type="checkbox" className="form-check-input" id="cat11" />
-                                                <label htmlFor="cat11">Early booking
-                                                    <span className="font-size-13 ms-1">(7)</span></label>
-                                            </div>
-                                            <div className="custom-checkbox">
-                                                <input type="checkbox" className="form-check-input" id="cat12" />
-                                                <label htmlFor="cat12">Last minute
-                                                    <span className="font-size-13 ms-1">(2)</span></label>
-                                            </div>
-                                        </div>
-                                        {/* end collapse */}
-                                        <a className="btn-text" data-bs-toggle="collapse" href="#categoryMenu" role="button" aria-expanded="false" aria-controls="categoryMenu">
-                                            <span className="show-more">Show More <i className="la la-angle-down" /></span>
-                                            <span className="show-less">Show Less <i className="la la-angle-up" /></span>
-                                        </a>
-                                    </div>
-                                </div>
+                                <BlogCategories id="categoryMenuSingle" />
                                 {/* end sidebar-widget */}
                                 <div className="sidebar-widget">
                                     <div className="section-tab section-tab-2 pb-3">

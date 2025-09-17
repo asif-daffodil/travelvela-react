@@ -79,6 +79,13 @@ const router = createBrowserRouter([
     ],
   },
   {
+    path: 'blog-single/:slug',
+    element: React.createElement(Layout2),
+    children: [
+      { index: true, element: React.createElement(BlogSingle) },
+    ],
+  },
+  {
     path: 'checkout',
     element: React.createElement(Layout2),
     children: [
