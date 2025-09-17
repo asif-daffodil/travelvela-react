@@ -25,6 +25,7 @@ import Recover from './pages/Recover.jsx'
 import Services from './pages/Services.jsx'
 import TourBooking from './pages/TourBooking.jsx'
 import TourDetails from './pages/TourDetails.jsx'
+import VerifyEmail from './pages/VerifyEmail.jsx'
 
 
 import TourSearchResult from './pages/TourSearchResult.jsx'
@@ -47,6 +48,13 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: React.createElement(Home) },
       { path: 'destinations', element: React.createElement(Destinations) },
+    ],
+  },
+  {
+    path: 'verify-email',
+    element: React.createElement(Layout2),
+    children: [
+      { index: true, element: React.createElement(VerifyEmail) },
     ],
   },
   {

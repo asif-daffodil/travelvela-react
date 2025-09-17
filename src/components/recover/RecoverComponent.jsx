@@ -1,7 +1,115 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 const RecoverComponent = () => {
+    const navigate = useNavigate();
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+        reset,
+    } = useForm();
+
+    const onSubmit = async ({ email }) => {
+        try {
+            const form = new URLSearchParams();
+            form.append('email', email);
+            const res = await axios.post(
+                'https://admin.travelvela.com/api/forget/password',
+                form,
+                {
+                    headers: {
+                        Authorization: 'TravelVela-DYSBW7537NUDD7078',
+                        username: 'genesis',
+                        password: 'ERTYUIO87347854',
+                    },
+                }
+            );
+            const { success, message, data } = res.data || {};
+
+            if (!success) {
+                await Swal.fire({
+                    icon: 'error',
+                    title: message || 'Request Failed',
+                    position: 'top',
+                    didOpen: () => {
+                        const container = document.querySelector('.swal2-container');
+                        if (container) container.style.zIndex = '200000';
+                    },
+                });
+                return;
+            }
+
+            const userName = data?.name || '';
+            const imagePath = data?.image || '';
+            const imageUrl = imagePath && !/^https?:\/\//i.test(imagePath)
+                ? `https://admin.travelvela.com/${imagePath}`
+                : imagePath;
+
+            const result = await Swal.fire({
+                icon: 'success',
+                title: message || 'Check your email',
+                text: userName ? `User: ${userName}` : undefined,
+                imageUrl: imageUrl || undefined,
+                imageAlt: userName || 'User Image',
+                position: 'top',
+                showCancelButton: true,
+                confirmButtonText: 'Enter Verification Code',
+                cancelButtonText: 'Close',
+                didOpen: () => {
+                    const container = document.querySelector('.swal2-container');
+                    if (container) container.style.zIndex = '200000';
+                },
+            });
+
+            if (result.isConfirmed) {
+                const { value: code } = await Swal.fire({
+                    title: 'Enter Verification Code',
+                    input: 'text',
+                    inputLabel: 'A verification code was sent to your email',
+                    inputPlaceholder: 'Enter your code',
+                    showCancelButton: true,
+                    confirmButtonText: 'Verify',
+                    cancelButtonText: 'Cancel',
+                    position: 'top',
+                    preConfirm: (value) => {
+                        if (!value || !String(value).trim()) {
+                            Swal.showValidationMessage('Code is required');
+                            return false;
+                        }
+                        return String(value).trim();
+                    },
+                    didOpen: () => {
+                        const container = document.querySelector('.swal2-container');
+                        if (container) container.style.zIndex = '200000';
+                    },
+                });
+                if (code) {
+                    // Navigate to verify page with email and code for convenience
+                    try {
+                        navigate('/verify-email', { state: { email, code } });
+                    } catch {
+                        // ignore navigation issues
+                    }
+                }
+            }
+            reset();
+        } catch (err) {
+            await Swal.fire({
+                icon: 'error',
+                title: 'Network Error',
+                text: err?.response?.data?.message || err.message || 'Please try again',
+                position: 'top',
+                didOpen: () => {
+                    const container = document.querySelector('.swal2-container');
+                    if (container) container.style.zIndex = '200000';
+                },
+            });
+        }
+    };
     return (
         <>
             {/* START BREADCRUMB AREA */}
@@ -62,17 +170,32 @@ const RecoverComponent = () => {
                                 {/* form-title-wrap */}
                                 <div className="form-content">
                                     <div className="contact-form-action">
-                                        <form method="post">
+                                        <form onSubmit={handleSubmit(onSubmit)} noValidate>
                                             <div className="input-box">
                                                 <label className="label-text">Your Email</label>
                                                 <div className="form-group">
                                                     <span className="la la-envelope-o form-icon" />
-                                                    <input className="form-control" type="email" name="email" placeholder="Enter email address" />
+                                                    <input
+                                                        className={`form-control ${errors.email ? 'is-invalid' : ''}`}
+                                                        type="email"
+                                                        placeholder="Enter email address"
+                                                        aria-invalid={errors.email ? 'true' : 'false'}
+                                                        {...register('email', {
+                                                            required: 'Email is required',
+                                                            pattern: {
+                                                                value: /[^\s@]+@[^\s@]+\.[^\s@]+/,
+                                                                message: 'Enter a valid email address',
+                                                            },
+                                                        })}
+                                                    />
+                                                    {errors.email && (
+                                                        <div className="invalid-feedback d-block">{errors.email.message}</div>
+                                                    )}
                                                 </div>
                                             </div>
                                             <div className="btn-box">
-                                                <button type="button" className="theme-btn">
-                                                    Reset Password
+                                                <button type="submit" className="theme-btn" disabled={isSubmitting}>
+                                                    {isSubmitting ? 'Sending...' : 'Reset Password'}
                                                 </button>
                                             </div>
                                         </form>

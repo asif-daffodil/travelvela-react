@@ -1,8 +1,18 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { clearUser } from '../store/slices/authSlice'
 import logo2 from '../assets/images/logo2.png'
 
 export default function Header1() {
+  const dispatch = useDispatch();
+  const { isAuthenticated, name } = useSelector((state) => state.auth || {});
+  const displayName = (name && String(name).split(' ')[0]) || 'Account';
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    dispatch(clearUser());
+  };
   return (
     <header className="header-area home-header">
       <div className="header-menu-wrapper">
@@ -89,8 +99,35 @@ export default function Header1() {
                   </div>
 
                   <div className="header-right-action main-header">
-                    <a href="#" className="theme-btn theme-btn-small theme-btn-transparent" data-bs-toggle="modal" data-bs-target="#signupPopupForm">Sign Up</a>
-                    <a href="#" className="theme-btn theme-btn-small" data-bs-toggle="modal" data-bs-target="#loginPopupForm">Login</a>
+                    {isAuthenticated ? (
+                      <div className="dropdown">
+                        <button
+                          className="theme-btn theme-btn-small dropdown-toggle"
+                          type="button"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          {displayName}
+                        </button>
+                        <ul className="dropdown-menu dropdown-menu-end">
+                          <li>
+                            <Link className="dropdown-item" to="/user-dashboard">Dashboard</Link>
+                          </li>
+                          <li>
+                            <Link className="dropdown-item" to="/user-profile">Profile</Link>
+                          </li>
+                          <li><hr className="dropdown-divider" /></li>
+                          <li>
+                            <button className="dropdown-item" onClick={handleLogout}>Logout</button>
+                          </li>
+                        </ul>
+                      </div>
+                    ) : (
+                      <>
+                        <a href="#" className="theme-btn theme-btn-small theme-btn-transparent" data-bs-toggle="modal" data-bs-target="#signupPopupForm">Sign Up</a>
+                        <a href="#" className="theme-btn theme-btn-small" data-bs-toggle="modal" data-bs-target="#loginPopupForm">Login</a>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>

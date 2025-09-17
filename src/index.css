@@ -1,0 +1,13 @@
+/* Ensure SweetAlert2 overlays above Bootstrap modals */
+.swal2-container {
+	z-index: 200000 !important; /* higher than Bootstrap modal (1055) */
+}
+.swal2-container.swal2-top, .swal2-container.swal2-center, .swal2-container.swal2-bottom {
+	z-index: 200000 !important;
+}
+.swal2-popup {
+	z-index: 200001 !important;
+}
+.swal2-backdrop-show, .swal2-shown {
+	z-index: 200000 !important;
+}

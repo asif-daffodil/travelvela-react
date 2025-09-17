@@ -1,12 +1,37 @@
 import UserDashboardFooter from '../user-dashboard/UserDashboardFooter';
 import UserDashboardBreadcrumb from '../user-dashboard/UserDashboardBreadcrumb';
 import { Chart, BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
-import { Link } from 'react-router-dom';
+import { useEffect, useMemo } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 const UserDashboardReviewsComponent = () => {
+    const navigate = useNavigate();
+    const { isAuthenticated, name, email, contact, image } = useSelector((state) => state.auth || {});
 
+    useEffect(() => {
+        if (!isAuthenticated) {
+            navigate('/', { replace: true });
+        }
+    }, [isAuthenticated, navigate]);
+
+    const { firstName, lastName } = useMemo(() => {
+        const full = (name || '').trim();
+        if (!full) return { firstName: '', lastName: '' };
+        const parts = full.split(/\s+/);
+        const f = parts[0] || '';
+        const l = parts.slice(1).join(' ');
+        return { firstName: f, lastName: l };
+    }, [name]);
+
+    const imageUrl = useMemo(() => {
+        if (image) {
+            return /^https?:\/\//i.test(image) ? image : `https://admin.travelvela.com/${image}`;
+        }
+        return 'images/team1.jpg';
+    }, [image]);
 
     return (
         <>
@@ -36,7 +61,7 @@ const UserDashboardReviewsComponent = () => {
                                     <div className="form-content">
                                         <div className="user-profile-action d-flex align-items-center pb-4">
                                             <div className="user-pro-img">
-                                                <img src="images/team1.jpg" alt="user-image" />
+                                                <img src={imageUrl} alt="user-image" />
                                             </div>
                                             <div className="upload-btn-box">
                                                 <p className="pb-2 font-size-15 line-height-24">
@@ -58,7 +83,7 @@ const UserDashboardReviewsComponent = () => {
                                                             <label className="label-text">First Name</label>
                                                             <div className="form-group">
                                                                 <span className="la la-user form-icon" />
-                                                                <input className="form-control" type="text" defaultValue="Ali" />
+                                                                <input className="form-control" type="text" defaultValue={firstName} />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -68,7 +93,7 @@ const UserDashboardReviewsComponent = () => {
                                                             <label className="label-text">Last Name</label>
                                                             <div className="form-group">
                                                                 <span className="la la-user form-icon" />
-                                                                <input className="form-control" type="text" defaultValue="Tufan" />
+                                                                <input className="form-control" type="text" defaultValue={lastName} />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -78,7 +103,7 @@ const UserDashboardReviewsComponent = () => {
                                                             <label className="label-text">Email Address</label>
                                                             <div className="form-group">
                                                                 <span className="la la-envelope form-icon" />
-                                                                <input className="form-control" type="text" defaultValue="alitufan@gmail.com" />
+                                                                <input className="form-control" type="text" defaultValue={email || ''} />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -88,7 +113,7 @@ const UserDashboardReviewsComponent = () => {
                                                             <label className="label-text">Phone number</label>
                                                             <div className="form-group">
                                                                 <span className="la la-phone form-icon" />
-                                                                <input className="form-control" type="text" defaultValue="+01 4561 3214" />
+                                                                <input className="form-control" type="text" defaultValue={contact || ''} />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -98,7 +123,7 @@ const UserDashboardReviewsComponent = () => {
                                                             <label className="label-text">Date of birth</label>
                                                             <div className="form-group">
                                                                 <span className="la la-user form-icon" />
-                                                                <input className="form-control" type="text" defaultValue="03 Jun 1990" />
+                                                                <input className="form-control" type="text" defaultValue="" />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -108,7 +133,7 @@ const UserDashboardReviewsComponent = () => {
                                                             <label className="label-text">Address</label>
                                                             <div className="form-group">
                                                                 <span className="la la-map form-icon" />
-                                                                <input className="form-control" type="text" defaultValue="8800 Orchard Lake Road, Suite 180 Farmington Hills, U.S.A." />
+                                                                <input className="form-control" type="text" defaultValue="" />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -144,7 +169,7 @@ const UserDashboardReviewsComponent = () => {
                                                             <label className="label-text">Current Email</label>
                                                             <div className="form-group">
                                                                 <span className="la la-envelope form-icon" />
-                                                                <input className="form-control" type="text" placeholder="Current email" />
+                                                                <input className="form-control" type="text" placeholder="Current email" defaultValue={email || ''} />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -261,7 +286,7 @@ const UserDashboardReviewsComponent = () => {
                                                     <label className="label-text">Email Address</label>
                                                     <div className="form-group">
                                                         <span className="la la-envelope form-icon" />
-                                                        <input className="form-control" type="text" placeholder="Enter email address" />
+                                                        <input className="form-control" type="text" placeholder="Enter email address" defaultValue={email || ''} />
                                                     </div>
                                                 </div>
                                                 <div className="btn-box">

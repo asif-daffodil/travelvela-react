@@ -1,12 +1,30 @@
 import UserDashboardFooter from '../user-dashboard/UserDashboardFooter';
 import UserDashboardBreadcrumb from '../user-dashboard/UserDashboardBreadcrumb';
 import { Chart, BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
-import { Link } from 'react-router-dom';
+import { useEffect, useMemo } from 'react';
+import { useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 
 Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 const UserDashboardProfileComponent = () => {
+    const navigate = useNavigate();
+    const { isAuthenticated, name, email, contact } = useSelector((state) => state.auth || {});
 
+    useEffect(() => {
+        if (!isAuthenticated) {
+            navigate('/', { replace: true });
+        }
+    }, [isAuthenticated, navigate]);
+
+    const { firstName, lastName } = useMemo(() => {
+        const full = (name || '').trim();
+        if (!full) return { firstName: '-', lastName: '-' };
+        const parts = full.split(/\s+/);
+        const f = parts[0] || '-';
+        const l = parts.slice(1).join(' ') || '-';
+        return { firstName: f, lastName: l };
+    }, [name]);
 
     return (
         <>
@@ -46,7 +64,7 @@ const UserDashboardProfileComponent = () => {
                                                             </div>
                                                         </td>
                                                         <td>:</td>
-                                                        <td>Ali</td>
+                                                        <td>{firstName}</td>
                                                     </tr>
                                                     <tr>
                                                         <td className="ps-0">
@@ -57,7 +75,7 @@ const UserDashboardProfileComponent = () => {
                                                             </div>
                                                         </td>
                                                         <td>:</td>
-                                                        <td>Tufan</td>
+                                                        <td>{lastName}</td>
                                                     </tr>
                                                     <tr>
                                                         <td className="ps-0">
@@ -68,7 +86,7 @@ const UserDashboardProfileComponent = () => {
                                                             </div>
                                                         </td>
                                                         <td>:</td>
-                                                        <td>alitufan@gmail.com</td>
+                                                        <td>{email || '-'}</td>
                                                     </tr>
                                                     <tr>
                                                         <td className="ps-0">
@@ -79,7 +97,7 @@ const UserDashboardProfileComponent = () => {
                                                             </div>
                                                         </td>
                                                         <td>:</td>
-                                                        <td>+01 4561 3214</td>
+                                                        <td>{contact || '-'}</td>
                                                     </tr>
                                                     <tr>
                                                         <td className="ps-0">
@@ -90,7 +108,7 @@ const UserDashboardProfileComponent = () => {
                                                             </div>
                                                         </td>
                                                         <td>:</td>
-                                                        <td>03 Jun 1990</td>
+                                                        <td>-</td>
                                                     </tr>
                                                     <tr>
                                                         <td className="ps-0">
@@ -101,17 +119,14 @@ const UserDashboardProfileComponent = () => {
                                                             </div>
                                                         </td>
                                                         <td>:</td>
-                                                        <td>
-                                                            8800 Orchard Lake Road, Suite 180 Farmington
-                                                            Hills, U.S.A.
-                                                        </td>
+                                                        <td>-</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
                                         </div>
                                         <div className="section-block" />
                                         <div className="btn-box mt-4">
-                                            <a href="user-dashboard-settings.html" className="theme-btn">Edit Profile</a>
+                                            <Link to="/user-dashboard-settings" className="theme-btn">Edit Profile</Link>
                                         </div>
                                     </div>
                                 </div>
